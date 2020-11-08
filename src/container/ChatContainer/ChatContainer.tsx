@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { HeaderPanel, Icon, IconButton, Input, ScrollBarContainer } from 'components/global/globalStyles';
 import Avatar from 'components/Avatar/Avatar';
 import { MdMoreVert, MdSearch, MdMood, MdAttachFile, MdMic, MdClose, MdGif, MdSend } from 'react-icons/md';
 import { BiNote } from 'react-icons/bi';
-import ChatTextMessage from '../../components/ChatTextMessage/ChatTextMessage';
-import { dummyMessage } from '../../assets/dummyData';
-import { MessageModel } from '../../models/MessageModel';
+import ChatTextMessage from 'components/ChatTextMessage/ChatTextMessage';
+import { dummyMessage } from 'assets/dummyData';
+import MessageModel from 'models/MessageModel';
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ChatContainerProps {}
 
@@ -118,9 +118,16 @@ const EmojiInput = styled.div`
 
 const ChatContainer: React.FC<ChatContainerProps> = (props: ChatContainerProps) => {
     const [textMessage, setTextMessage] = useState('');
+    const scrollRef = useRef<HTMLDivElement>(null);
     const [messages, setMessages] = useState<Array<MessageModel>>(dummyMessage);
     const [openEmojiInput, setOpenEmojiInput] = useState(false);
     const [selectedEmojiInput, setSelectedEmojiInput] = useState<EmojiType>();
+
+    useEffect(() => {
+        if (scrollRef && scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+    }, [messages]);
 
     const messageOnChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTextMessage(event.target.value);
@@ -132,7 +139,7 @@ const ChatContainer: React.FC<ChatContainerProps> = (props: ChatContainerProps) 
                 id: messages.length + 1,
                 message: textMessage,
                 sender_id: 1,
-                created_at: messages.length + 1,
+                created_at: new Date().toISOString(),
             };
             setMessages([...messages, newMessage]);
             setTextMessage('');
@@ -142,6 +149,16 @@ const ChatContainer: React.FC<ChatContainerProps> = (props: ChatContainerProps) 
     const messageSubmitHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter' && textMessage.length > 0) {
             sendMessageHandler();
+        }
+    };
+
+    const sortByDate = (a: MessageModel, b: MessageModel) => {
+        if (a.created_at < b.created_at) {
+            return -1;
+        } else if (a.created_at > b.created_at) {
+            return 1;
+        } else {
+            return 0;
         }
     };
 
@@ -163,20 +180,16 @@ const ChatContainer: React.FC<ChatContainerProps> = (props: ChatContainerProps) 
                     </IconButton>
                 </ActionContainer>
             </StyledHeaderPanel>
-            <ChattingPanel>
-                {/*<div style={{ height: '300rem' }}>*/}
-                {messages
-                    .sort((a, b) => a.created_at - b.created_at)
-                    .map((item, index) => (
-                        <ChatTextMessage
-                            key={index}
-                            currentMessage={item}
-                            previousMessage={index - 1 >= 0 ? messages[index - 1] : null}
-                            nextMessage={index + 1 < messages.length ? messages[index + 1] : null}
-                            loggedInUserId={1}
-                        />
-                    ))}
-                {/*</div>*/}
+            <ChattingPanel ref={scrollRef}>
+                {messages.sort(sortByDate).map((item, index) => (
+                    <ChatTextMessage
+                        key={index}
+                        currentMessage={item}
+                        previousMessage={index - 1 >= 0 ? messages[index - 1] : null}
+                        nextMessage={index + 1 < messages.length ? messages[index + 1] : null}
+                        loggedInUserId={1}
+                    />
+                ))}
             </ChattingPanel>
             {openEmojiInput && <EmojiInput></EmojiInput>}
             <FooterPanel>

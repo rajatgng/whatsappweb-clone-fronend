@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { MessageModel } from '../../models/MessageModel';
+import MessageModel from 'models/MessageModel';
 
 interface ChatTextMessageProps {
     currentMessage: MessageModel;
@@ -10,7 +10,7 @@ interface ChatTextMessageProps {
 }
 
 const SWrapper = styled.div`
-    padding: 0 9rem;
+    padding: 0 9%;
     display: flex;
 `;
 
@@ -85,20 +85,59 @@ const SentMessagePointer = styled(SMessagePointer)`
     border-top-left-radius: 0.1rem;
 `;
 
+const DateViewContainer = styled.div`
+    padding: 0 9%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+const DateView = styled.div`
+    text-align: center;
+    padding: 0.6rem 1.2rem 0.6rem;
+    margin-bottom: 1.2rem;
+    background-color: rgba(225, 245, 254, 0.92);
+    border-radius: 0.75rem;
+    text-shadow: 0 0.1rem 0 rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0.1rem 0.05rem rgba(0, 0, 0, 0.13);
+    font-size: 1.25rem;
+    line-height: 2.1rem;
+    text-transform: uppercase;
+`;
+
 const ChatTextMessage: React.FC<ChatTextMessageProps> = (props: ChatTextMessageProps) => {
     const isReceived = props.loggedInUserId !== props.currentMessage.sender_id;
     const firstOfType = props.currentMessage.sender_id !== props.previousMessage?.sender_id;
     const lastOfType = props.currentMessage.sender_id !== props.nextMessage?.sender_id;
+
     const Wrapper = isReceived ? ReceivedWrapper : SentWrapper;
     const MessageContainer = isReceived ? ReceivedMessageContainer : SentMessageContainer;
     const MessagePointer = isReceived ? ReceivedMessagePointer : SentMessagePointer;
+
+    let currentMsgDate = new Date(props.currentMessage.created_at).toLocaleDateString();
+    const previousMsgDate = props.previousMessage
+        ? new Date(props.previousMessage.created_at).toLocaleDateString()
+        : null;
+    const showDate = currentMsgDate !== previousMsgDate;
+    const previousDayDate = (+new Date().toLocaleDateString().split('/').reverse().join('') - 1).toString();
+    if (currentMsgDate === new Date().toLocaleDateString()) {
+        currentMsgDate = 'Today';
+    } else if (currentMsgDate.split('/').reverse().join('') === previousDayDate) {
+        currentMsgDate = 'Yesterday';
+    }
     return (
-        <Wrapper>
-            {firstOfType && <MessagePointer />}
-            <MessageContainer firstOfType={firstOfType} lastOfType={lastOfType}>
-                {props.currentMessage.message}
-            </MessageContainer>
-        </Wrapper>
+        <>
+            {showDate && (
+                <DateViewContainer>
+                    <DateView>{currentMsgDate}</DateView>
+                </DateViewContainer>
+            )}
+            <Wrapper>
+                {firstOfType && <MessagePointer />}
+                <MessageContainer firstOfType={firstOfType} lastOfType={lastOfType}>
+                    {props.currentMessage.message}
+                </MessageContainer>
+            </Wrapper>
+        </>
     );
 };
 
