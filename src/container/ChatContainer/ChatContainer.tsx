@@ -1,8 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { HeaderPanel, Icon, IconButton, Input, ScrollBarContainer } from 'components/global/globalStyles';
 import Avatar from 'components/Avatar/Avatar';
-import { MdMoreVert, MdSearch, MdMood, MdAttachFile, MdMic, MdClose, MdGif, MdSend } from 'react-icons/md';
+import {
+    MdMoreVert,
+    MdSearch,
+    MdMood,
+    MdAttachFile,
+    MdMic,
+    MdClose,
+    MdGif,
+    MdSend,
+    MdExpandMore,
+} from 'react-icons/md';
 import { BiNote } from 'react-icons/bi';
 import ChatTextMessage from 'components/ChatTextMessage/ChatTextMessage';
 import { dummyMessage } from 'assets/dummyData';
@@ -26,6 +36,7 @@ const SendIcon = Icon(MdSend, { size: iconSize });
 const CloseIcon = Icon(MdClose, { size: iconSize });
 const GifIcon = Icon(MdGif, { size: iconSize });
 const StickerIcon = Icon(BiNote, { size: iconSize });
+const ExpandMoreIcon = Icon(MdExpandMore, { size: iconSize });
 
 const Wrapper = styled.div`
     width: 70%;
@@ -116,18 +127,51 @@ const EmojiInput = styled.div`
     z-index: 999;
 `;
 
+const enlargeAnimation = keyframes`
+ 0% { transform: scale(0); }
+ 100% {transform: scale(1) ; }
+`;
+
+const outLargeAnimation = keyframes`
+ 0% { transform: scale(1); }
+ 100% {transform: scale(0) ; }
+`;
+
+const ScrollDownBtn = styled.div<{ isUnMounting?: boolean }>`
+    height: 4.2rem;
+    width: 4.2rem;
+    border-radius: 50%;
+    background-color: #fff;
+    position: absolute;
+    right: 1rem;
+    bottom: 8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    box-shadow: 0 0.1rem 0.1rem 0 rgba(0, 0, 0, 0.06), 0 0.2rem 0.5rem 0 rgba(0, 0, 0, 0.2);
+    animation: ${({ isUnMounting }) => (isUnMounting ? outLargeAnimation : enlargeAnimation)} 250ms
+        cubic-bezier(0.4, 0, 0.2, 1);
+`;
+
 const ChatContainer: React.FC<ChatContainerProps> = (props: ChatContainerProps) => {
     const [textMessage, setTextMessage] = useState('');
     const scrollRef = useRef<HTMLDivElement>(null);
     const [messages, setMessages] = useState<Array<MessageModel>>(dummyMessage);
     const [openEmojiInput, setOpenEmojiInput] = useState(false);
     const [selectedEmojiInput, setSelectedEmojiInput] = useState<EmojiType>();
+    const [isScrollDownBtnVisible, setIsScrollDownBtnVisible] = useState<boolean>(false);
+    const [isUnMounting, setUnMounting] = useState<boolean>(false);
 
     useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    const scrollToBottom = () => {
         if (scrollRef && scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-    }, [messages]);
+    };
 
     const messageOnChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTextMessage(event.target.value);
@@ -162,6 +206,20 @@ const ChatContainer: React.FC<ChatContainerProps> = (props: ChatContainerProps) 
         }
     };
 
+    const onScrollHandler = (event: React.UIEvent<HTMLDivElement>) => {
+        const condition =
+            event.currentTarget.scrollHeight - (event.currentTarget.scrollTop + event.currentTarget.offsetHeight);
+        if (!isScrollDownBtnVisible && condition > 100) {
+            setIsScrollDownBtnVisible(true);
+        } else if (isScrollDownBtnVisible && condition < 100) {
+            setUnMounting(true);
+            setTimeout(() => {
+                setIsScrollDownBtnVisible(false);
+                setUnMounting(false);
+            }, 250);
+        }
+    };
+
     return (
         <Wrapper>
             <ChatTiles />
@@ -180,7 +238,7 @@ const ChatContainer: React.FC<ChatContainerProps> = (props: ChatContainerProps) 
                     </IconButton>
                 </ActionContainer>
             </StyledHeaderPanel>
-            <ChattingPanel ref={scrollRef}>
+            <ChattingPanel ref={scrollRef} onScroll={onScrollHandler}>
                 {messages.sort(sortByDate).map((item, index) => (
                     <ChatTextMessage
                         key={index}
@@ -191,6 +249,11 @@ const ChatContainer: React.FC<ChatContainerProps> = (props: ChatContainerProps) 
                     />
                 ))}
             </ChattingPanel>
+            {isScrollDownBtnVisible && (
+                <ScrollDownBtn isUnMounting={isUnMounting} onClick={scrollToBottom}>
+                    <ExpandMoreIcon />
+                </ScrollDownBtn>
+            )}
             {openEmojiInput && <EmojiInput></EmojiInput>}
             <FooterPanel>
                 <FooterLeftActions>

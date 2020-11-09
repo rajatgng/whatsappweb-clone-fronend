@@ -38,6 +38,8 @@ export const IconButton = styled.button`
 
 export const ScrollBarContainer = styled.div`
     overflow: auto;
+    //scroll-behavior: smooth;
+
     /* width */
     ::-webkit-scrollbar {
         width: 0.6rem;
