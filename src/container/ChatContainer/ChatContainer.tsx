@@ -1,41 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { HeaderPanel, Icon, IconButton, Input, ScrollBarContainer } from 'components/global/globalStyles';
-import Avatar from 'components/Avatar/Avatar';
-import {
-    MdMoreVert,
-    MdSearch,
-    MdMood,
-    MdAttachFile,
-    MdMic,
-    MdClose,
-    MdGif,
-    MdSend,
-    MdExpandMore,
-} from 'react-icons/md';
-import { BiNote } from 'react-icons/bi';
+import { Icon, ScrollBarContainer } from 'components/global/globalStyles';
+import { MdExpandMore } from 'react-icons/md';
 import ChatTextMessage from 'components/ChatTextMessage/ChatTextMessage';
-import { dummyMessage } from 'assets/dummyData';
 import MessageModel from 'models/MessageModel';
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ChatContainerProps {}
+import RoomModel from 'models/RoomModel';
+import { sortByChronology } from 'utils/sortByChronology';
+import ChatContainerFooter from 'container/ChatContainerFooter/ChatContainerFooter';
+import ChatContainerHeader from '../ChatContainerHeader/ChatContainerHeader';
 
-enum EmojiType {
-    EMOJI,
-    GIF,
-    STICKER,
+interface ChatContainerProps {
+    selectedChatRoom: RoomModel;
+    onMessageSubmit: (message: MessageModel) => void;
 }
+
 const iconSize = '2.8rem';
 
-const MoreVertIcon = Icon(MdMoreVert, { size: iconSize });
-const SearchIcon = Icon(MdSearch, { size: iconSize });
-const MoodIcon = Icon(MdMood, { size: iconSize });
-const AttachFileIcon = Icon(MdAttachFile, { size: iconSize });
-const MicIcon = Icon(MdMic, { size: iconSize });
-const SendIcon = Icon(MdSend, { size: iconSize });
-const CloseIcon = Icon(MdClose, { size: iconSize });
-const GifIcon = Icon(MdGif, { size: iconSize });
-const StickerIcon = Icon(BiNote, { size: iconSize });
 const ExpandMoreIcon = Icon(MdExpandMore, { size: iconSize });
 
 const Wrapper = styled.div`
@@ -45,24 +25,6 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
 `;
-
-const StyledHeaderPanel = styled(HeaderPanel)`
-    border-left: 0.1rem solid #d9d9d9;
-    display: flex;
-    align-items: center;
-    padding: 1rem 1.6rem;
-    z-index: 999;
-`;
-
-const InfoContainer = styled.div`
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    margin: 0 1.5rem;
-    cursor: pointer;
-`;
-
-const ActionContainer = styled.div``;
 
 const ChattingPanel = styled(ScrollBarContainer)`
     flex: 1;
@@ -83,48 +45,6 @@ const ChatTiles = styled.div`
     height: 100%;
     opacity: 0.06;
     position: absolute;
-`;
-
-const FooterPanel = styled.div`
-    display: flex;
-    align-items: center;
-    min-height: 6.2rem;
-    background-color: #ededed;
-    z-index: 999;
-    padding: 0.5rem 1rem;
-`;
-
-const StyledInput = styled(Input)`
-    min-height: 4.2rem;
-`;
-
-const FooterLeftActions = styled.div`
-    display: flex;
-    padding: 0.5rem 1rem;
-`;
-
-const FooterRightActions = styled.div`
-    display: flex;
-    padding: 0.5rem 1rem;
-`;
-
-const StyledIconButton = styled(IconButton)<{ selected?: boolean }>`
-    :focus {
-        background-color: rgba(0, 0, 0, 0);
-    }
-    ${({ selected }) =>
-        selected &&
-        `
-    svg {
-        color: #009688;
-    }
-    `}
-`;
-
-const EmojiInput = styled.div`
-    height: 32rem;
-    background-color: #ededed;
-    z-index: 999;
 `;
 
 const enlargeAnimation = keyframes`
@@ -155,54 +75,18 @@ const ScrollDownBtn = styled.div<{ isUnMounting?: boolean }>`
 `;
 
 const ChatContainer: React.FC<ChatContainerProps> = (props: ChatContainerProps) => {
-    const [textMessage, setTextMessage] = useState('');
     const scrollRef = useRef<HTMLDivElement>(null);
-    const [messages, setMessages] = useState<Array<MessageModel>>(dummyMessage);
-    const [openEmojiInput, setOpenEmojiInput] = useState(false);
-    const [selectedEmojiInput, setSelectedEmojiInput] = useState<EmojiType>();
     const [isScrollDownBtnVisible, setIsScrollDownBtnVisible] = useState<boolean>(false);
     const [isUnMounting, setUnMounting] = useState<boolean>(false);
+    const [isEmojiInputOpened, setIsEmojiInputOpened] = useState<boolean>(false);
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages]);
+    }, [props.selectedChatRoom, props.selectedChatRoom.messages?.length, isEmojiInputOpened]);
 
     const scrollToBottom = () => {
         if (scrollRef && scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-        }
-    };
-
-    const messageOnChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setTextMessage(event.target.value);
-    };
-
-    const sendMessageHandler = () => {
-        if (messages.length > 0) {
-            const newMessage: MessageModel = {
-                id: messages.length + 1,
-                message: textMessage,
-                sender_id: 1,
-                created_at: new Date().toISOString(),
-            };
-            setMessages([...messages, newMessage]);
-            setTextMessage('');
-        }
-    };
-
-    const messageSubmitHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter' && textMessage.length > 0) {
-            sendMessageHandler();
-        }
-    };
-
-    const sortByDate = (a: MessageModel, b: MessageModel) => {
-        if (a.created_at < b.created_at) {
-            return -1;
-        } else if (a.created_at > b.created_at) {
-            return 1;
-        } else {
-            return 0;
         }
     };
 
@@ -223,96 +107,42 @@ const ChatContainer: React.FC<ChatContainerProps> = (props: ChatContainerProps) 
     return (
         <Wrapper>
             <ChatTiles />
-            <StyledHeaderPanel>
-                <Avatar />
-                <InfoContainer>
-                    <h1 style={{ fontSize: '17px', fontWeight: 500 }}>Chat Title</h1>
-                    <h3 style={{ fontSize: '14px', fontWeight: 300 }}>Lorem Ipsum, Lorem Ipsum</h3>
-                </InfoContainer>
-                <ActionContainer>
-                    <IconButton>
-                        <SearchIcon />
-                    </IconButton>
-                    <IconButton>
-                        <MoreVertIcon />
-                    </IconButton>
-                </ActionContainer>
-            </StyledHeaderPanel>
+            <ChatContainerHeader roomName={props.selectedChatRoom.room_name} />
             <ChattingPanel ref={scrollRef} onScroll={onScrollHandler}>
-                {messages.sort(sortByDate).map((item, index) => (
-                    <ChatTextMessage
-                        key={index}
-                        currentMessage={item}
-                        previousMessage={index - 1 >= 0 ? messages[index - 1] : null}
-                        nextMessage={index + 1 < messages.length ? messages[index + 1] : null}
-                        loggedInUserId={1}
-                    />
-                ))}
+                {props.selectedChatRoom &&
+                    props.selectedChatRoom.messages &&
+                    props.selectedChatRoom.messages.length > 0 &&
+                    props.selectedChatRoom.messages
+                        .sort((a, b) => sortByChronology(a.created_at, b.created_at))
+                        .map((item, index) => (
+                            <ChatTextMessage
+                                key={index}
+                                currentMessage={item}
+                                previousMessage={
+                                    props.selectedChatRoom.messages && index - 1 >= 0
+                                        ? props.selectedChatRoom.messages[index - 1]
+                                        : null
+                                }
+                                nextMessage={
+                                    props.selectedChatRoom.messages &&
+                                    index + 1 < props.selectedChatRoom.messages.length
+                                        ? props.selectedChatRoom?.messages[index + 1]
+                                        : null
+                                }
+                                loggedInUserId={2}
+                            />
+                        ))}
             </ChattingPanel>
             {isScrollDownBtnVisible && (
                 <ScrollDownBtn isUnMounting={isUnMounting} onClick={scrollToBottom}>
                     <ExpandMoreIcon />
                 </ScrollDownBtn>
             )}
-            {openEmojiInput && <EmojiInput></EmojiInput>}
-            <FooterPanel>
-                <FooterLeftActions>
-                    {openEmojiInput && (
-                        <StyledIconButton
-                            onClick={() => {
-                                setOpenEmojiInput(false);
-                                setSelectedEmojiInput(undefined);
-                            }}
-                        >
-                            <CloseIcon />
-                        </StyledIconButton>
-                    )}
-                    <StyledIconButton
-                        onClick={() => {
-                            setOpenEmojiInput(true);
-                            setSelectedEmojiInput(EmojiType.EMOJI);
-                        }}
-                        selected={selectedEmojiInput === EmojiType.EMOJI}
-                    >
-                        <MoodIcon />
-                    </StyledIconButton>
-                    {openEmojiInput && (
-                        <>
-                            <StyledIconButton
-                                selected={selectedEmojiInput === EmojiType.GIF}
-                                onClick={() => {
-                                    setSelectedEmojiInput(EmojiType.GIF);
-                                }}
-                            >
-                                <GifIcon />
-                            </StyledIconButton>
-                            <StyledIconButton
-                                selected={selectedEmojiInput === EmojiType.STICKER}
-                                onClick={() => {
-                                    setSelectedEmojiInput(EmojiType.STICKER);
-                                }}
-                            >
-                                <StickerIcon />
-                            </StyledIconButton>
-                        </>
-                    )}
-                    <IconButton>
-                        <AttachFileIcon />
-                    </IconButton>
-                </FooterLeftActions>
-                <StyledInput
-                    placeholder="Type a message"
-                    onChange={messageOnChangeHandler}
-                    value={textMessage}
-                    onKeyDown={messageSubmitHandler}
-                />
-                <FooterRightActions>
-                    <StyledIconButton>
-                        {!textMessage.length && <MicIcon />}
-                        {!!textMessage.length && <SendIcon onClick={sendMessageHandler} />}
-                    </StyledIconButton>
-                </FooterRightActions>
-            </FooterPanel>
+            <ChatContainerFooter
+                selectedChatRoom={props.selectedChatRoom}
+                onMessageSubmit={props.onMessageSubmit}
+                emojiInputToggle={(v) => setIsEmojiInputOpened(v)}
+            />
         </Wrapper>
     );
 };

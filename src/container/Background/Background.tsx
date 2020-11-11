@@ -8,12 +8,16 @@ interface BackgroundProps {
 const BackgroundContainer = styled.div`
     background-color: #e5ddd5;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
     width: 100vw;
     ::after {
         background-color: #489789;
         height: 12rem;
-        position: fixed;
+        top: 0;
+        position: absolute;
         content: '';
         width: 100%;
     }

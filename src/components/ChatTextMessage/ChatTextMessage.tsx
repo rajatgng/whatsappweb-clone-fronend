@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import MessageModel from 'models/MessageModel';
+import { textualDateFormat } from '../../utils/dateAndTimeUtils';
 
 interface ChatTextMessageProps {
     currentMessage: MessageModel;
-    previousMessage: MessageModel | null;
-    nextMessage: MessageModel | null;
+    previousMessage: MessageModel | null | undefined;
+    nextMessage: MessageModel | null | undefined;
     loggedInUserId: number;
 }
 
@@ -113,22 +114,17 @@ const ChatTextMessage: React.FC<ChatTextMessageProps> = (props: ChatTextMessageP
     const MessageContainer = isReceived ? ReceivedMessageContainer : SentMessageContainer;
     const MessagePointer = isReceived ? ReceivedMessagePointer : SentMessagePointer;
 
-    let currentMsgDate = new Date(props.currentMessage.created_at).toLocaleDateString();
+    const currentMsgDate = new Date(props.currentMessage.created_at).toLocaleDateString();
     const previousMsgDate = props.previousMessage
         ? new Date(props.previousMessage.created_at).toLocaleDateString()
         : null;
     const showDate = currentMsgDate !== previousMsgDate;
-    const previousDayDate = (+new Date().toLocaleDateString().split('/').reverse().join('') - 1).toString();
-    if (currentMsgDate === new Date().toLocaleDateString()) {
-        currentMsgDate = 'Today';
-    } else if (currentMsgDate.split('/').reverse().join('') === previousDayDate) {
-        currentMsgDate = 'Yesterday';
-    }
+
     return (
         <>
             {showDate && (
                 <DateViewContainer>
-                    <DateView>{currentMsgDate}</DateView>
+                    <DateView>{textualDateFormat(props.currentMessage.created_at)}</DateView>
                 </DateViewContainer>
             )}
             <Wrapper>

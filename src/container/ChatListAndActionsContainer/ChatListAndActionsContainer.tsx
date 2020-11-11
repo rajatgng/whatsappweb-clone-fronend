@@ -1,11 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-import { HeaderPanel, Icon, IconButton, ScrollBarContainer } from 'components/global/globalStyles';
+import { HeaderPanel, Icon, IconButton } from 'components/global/globalStyles';
 import SearchBar from 'components/SearchBar/SearchBar';
 import { MdChat, MdDonutLarge, MdMoreVert } from 'react-icons/md';
 import Avatar from 'components/Avatar/Avatar';
-import ChatCard, { MessageStatus } from 'components/ChatCard/ChatCard';
+import RoomModel from 'models/RoomModel';
+import RoomListContainer from 'container/RoomListContainer/RoomListContainer';
 
+interface ChatListAndActionsContainerProps {
+    setSelectedChatRoomId: (id: number) => void;
+    selectedChatRoom?: RoomModel;
+    rooms: RoomModel[];
+}
 const Wrapper = styled.div`
     width: 30%;
 `;
@@ -23,15 +29,13 @@ const RightActions = styled.div`
     }
 `;
 
-const ChatsNavigation = styled(ScrollBarContainer)`
-    height: calc(100% - 6rem - 5rem); //6rem for header panel and 5rem for search bar
-`;
-
 const StatusIcon = Icon(MdDonutLarge);
 const ChatIcon = Icon(MdChat);
 const MoreVertIcon = Icon(MdMoreVert);
 
-const ChatListAndActionsContainer: React.FC = () => {
+const ChatListAndActionsContainer: React.FC<ChatListAndActionsContainerProps> = (
+    props: ChatListAndActionsContainerProps,
+) => {
     return (
         <Wrapper>
             <HeaderPanel>
@@ -51,21 +55,11 @@ const ChatListAndActionsContainer: React.FC = () => {
                 </HeaderContent>
             </HeaderPanel>
             <SearchBar onChange={(text) => console.log(text)} />
-            <ChatsNavigation>
-                <ChatCard unreadCount={2} />
-                <ChatCard unreadCount={5} />
-                <ChatCard messageStatus={MessageStatus.SEEN} />
-                <ChatCard muted messageStatus={MessageStatus.DELIVERED} />
-                <ChatCard selected messageStatus={MessageStatus.SEEN} />
-                <ChatCard muted messageStatus={MessageStatus.DELIVERED} />
-                <ChatCard messageStatus={MessageStatus.SEEN} />
-                <ChatCard muted messageStatus={MessageStatus.DELIVERED} />
-                <ChatCard messageStatus={MessageStatus.SEEN} />
-                <ChatCard muted messageStatus={MessageStatus.DELIVERED} />
-                <ChatCard messageStatus={MessageStatus.SEEN} />
-                <ChatCard muted messageStatus={MessageStatus.DELIVERED} />
-                <ChatCard unreadCount={2} />
-            </ChatsNavigation>
+            <RoomListContainer
+                rooms={props.rooms}
+                selectedRoom={props.selectedChatRoom}
+                setSelectedRoomId={props.setSelectedChatRoomId}
+            />
         </Wrapper>
     );
 };

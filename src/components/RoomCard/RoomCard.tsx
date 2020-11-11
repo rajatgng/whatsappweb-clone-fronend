@@ -4,25 +4,30 @@ import Avatar from 'components/Avatar/Avatar';
 import { MdDone, MdDoneAll, MdVolumeOff, MdExpandMore, MdVideocam } from 'react-icons/md';
 import { Icon } from 'components/global/globalStyles';
 
-const SentIcon = Icon(MdDone, { size: '1.8rem' });
-const DeliveredIcon = Icon(MdDoneAll, { size: '1.8rem' });
-const SeenIcon = Icon(MdDoneAll, { size: '1.8rem', color: '#4fc3f7' });
-const ExpandMoreIcon = Icon(MdExpandMore, { size: '2.8rem' });
-const MuteIcon = Icon(MdVolumeOff, { size: '2rem' });
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ChatCardProps {
-    muted?: boolean;
-    selected?: boolean;
-    messageStatus?: MessageStatus;
-    unreadCount?: number;
-}
-
 export enum MessageStatus {
     SENT,
     DELIVERED,
     SEEN,
 }
-const ChatCardContainer = styled.div<{ selected?: boolean }>`
+
+const SentIcon = Icon(MdDone, { size: '1.8rem' });
+const DeliveredIcon = Icon(MdDoneAll, { size: '1.8rem' });
+const SeenIcon = Icon(MdDoneAll, { size: '1.8rem', color: '#4fc3f7' });
+const ExpandMoreIcon = Icon(MdExpandMore, { size: '2.8rem' });
+const MuteIcon = Icon(MdVolumeOff, { size: '2rem' });
+
+interface ChatCardProps {
+    muted?: boolean;
+    selected?: boolean;
+    messageStatus?: MessageStatus;
+    unreadCount?: number;
+    onClick: (e: React.MouseEvent) => void;
+    title: string;
+    description?: string;
+    date?: string;
+}
+
+const RoomCardContainer = styled.div<{ selected?: boolean }>`
     cursor: pointer;
     height: 7.5rem;
     display: flex;
@@ -88,7 +93,7 @@ const UnreadMessageCount = styled.div`
     text-align: center;
 `;
 
-const ChatCard: React.FC<ChatCardProps> = (props: ChatCardProps) => {
+const RoomCard: React.FC<ChatCardProps> = (props: ChatCardProps) => {
     const [isHovered, setIsHovered] = useState(false);
 
     const { messageStatus, muted, selected, unreadCount } = props;
@@ -103,22 +108,23 @@ const ChatCard: React.FC<ChatCardProps> = (props: ChatCardProps) => {
         }
     };
     return (
-        <ChatCardContainer
+        <RoomCardContainer
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             selected={selected}
+            onClick={(e) => props.onClick(e)}
         >
             <Avatar size={'5rem'} />
             <Content>
                 <SpaceBetweenContainer>
-                    <h1 style={{ fontSize: '17px', fontWeight: 500 }}>Chat Title</h1>
-                    <p style={{ fontSize: '12px', fontWeight: 200 }}>12:06 AM</p>
+                    <h1 style={{ fontSize: '17px', fontWeight: 400 }}>{props.title}</h1>
+                    <p style={{ fontSize: '12px', fontWeight: 200 }}>{props.date}</p>
                 </SpaceBetweenContainer>
                 <LastMessageAndActionContainer>
                     <LastChatMessageContainer>
                         <MessageStatusIcon />
                         <LastChatMessage>
-                            <h3 style={{ fontSize: '14px', fontWeight: 300 }}>Lorem Ipsum</h3>
+                            <h3 style={{ fontSize: '14px', fontWeight: 300 }}>{props.description}</h3>
                         </LastChatMessage>
                     </LastChatMessageContainer>
                     <ActionContainer>
@@ -128,8 +134,8 @@ const ChatCard: React.FC<ChatCardProps> = (props: ChatCardProps) => {
                     </ActionContainer>
                 </LastMessageAndActionContainer>
             </Content>
-        </ChatCardContainer>
+        </RoomCardContainer>
     );
 };
 
-export default ChatCard;
+export default RoomCard;

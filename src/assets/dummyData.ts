@@ -1,5 +1,6 @@
 import UserModel from 'models/UserModel';
 import MessageModel from 'models/MessageModel';
+import RoomModel, { RoomCategory } from 'models/RoomModel';
 
 export const users: Array<UserModel> = [
     {
@@ -564,5 +565,106 @@ export const dummyMessage: Array<MessageModel> = [
         message: 'Business-focused upward-trending hardware',
         sender_id: 2,
         created_at: '2020-11-08T18:28:03Z',
+    },
+];
+
+export const getRooms: Array<RoomModel> = [
+    {
+        id: 1,
+        messages: dummyMessage,
+        room_name: 'Waldo',
+        members: [
+            {
+                id: 1,
+                first_name: 'Brett',
+                last_name: 'Lloyd-Williams',
+                phone_no: '9603133120',
+                gender: 'Female',
+                image_url: 'https://robohash.org/quissitlaudantium.jpg?size=50x50&set=set1',
+            },
+            {
+                id: 2,
+                first_name: 'Waldo',
+                last_name: 'Housby',
+                phone_no: '7228654799',
+                gender: 'Male',
+                image_url: 'https://robohash.org/voluptatemsimiliquedignissimos.jpg?size=50x50&set=set1',
+            },
+        ],
+        category: RoomCategory.PERSONAL,
+    },
+    {
+        id: 2,
+        messages: [
+            {
+                id: 1,
+                message: '22Profit-focused radical forecast',
+                sender_id: 2,
+                created_at: '2020-05-07T05:53:00Z',
+            },
+            {
+                id: 2,
+                message: '22Profound upward-trending groupware',
+                sender_id: 2,
+                created_at: '2020-05-07T05:53:00Z',
+            },
+        ],
+        room_name: 'Waldo 2',
+        members: [
+            {
+                id: 1,
+                first_name: 'Brett',
+                last_name: 'Lloyd-Williams',
+                phone_no: '9603133120',
+                gender: 'Female',
+                image_url: 'https://robohash.org/quissitlaudantium.jpg?size=50x50&set=set1',
+            },
+            {
+                id: 2,
+                first_name: 'Waldo',
+                last_name: 'Housby',
+                phone_no: '7228654799',
+                gender: 'Male',
+                image_url: 'https://robohash.org/voluptatemsimiliquedignissimos.jpg?size=50x50&set=set1',
+            },
+        ],
+        category: RoomCategory.PERSONAL,
+    },
+    {
+        id: 3,
+        messages: [
+            {
+                id: 1,
+                message: '33Profit-focused radical forecast',
+                sender_id: 2,
+                created_at: '2020-11-07T05:53:00Z',
+            },
+            {
+                id: 2,
+                message: 'last 33Profound upward-trending groupware',
+                sender_id: 2,
+                created_at: '2020-11-07T06:53:00Z',
+            },
+        ],
+        room_name: 'Waldo 3',
+        members: [
+            {
+                id: 1,
+                first_name: 'Brett',
+                last_name: 'Lloyd-Williams',
+                phone_no: '9603133120',
+                gender: 'Female',
+                image_url: 'https://robohash.org/quissitlaudantium.jpg?size=50x50&set=set1',
+            },
+            {
+                id: 2,
+                first_name: 'Waldo',
+                last_name: 'Housby',
+                phone_no: '7228654799',
+                gender: 'Male',
+                image_url: 'https://robohash.org/voluptatemsimiliquedignissimos.jpg?size=50x50&set=set1',
+            },
+        ],
+        category: RoomCategory.PERSONAL,
     },
 ];
