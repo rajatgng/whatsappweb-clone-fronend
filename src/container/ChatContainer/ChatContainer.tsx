@@ -12,18 +12,28 @@ import ChatContainerHeader from '../ChatContainerHeader/ChatContainerHeader';
 interface ChatContainerProps {
     selectedChatRoom: RoomModel;
     onMessageSubmit: (message: MessageModel) => void;
+    isInfoContainerOpen: boolean;
+    onChatContainerHeaderClick: () => void;
 }
 
 const iconSize = '2.8rem';
 
 const ExpandMoreIcon = Icon(MdExpandMore, { size: iconSize });
 
-const Wrapper = styled.div`
-    width: 70%;
+const Wrapper = styled.div<{ isInfoContainerOpen: boolean }>`
     background-color: #e5ddd5;
     position: relative;
     display: flex;
+    flex: 3;
     flex-direction: column;
+    min-width: 0; // or overflow: hidden;
+    @media screen and (max-width: 1024px) {
+        ${({ isInfoContainerOpen }) =>
+            isInfoContainerOpen &&
+            `
+        display: none;
+    `};
+    }
 `;
 
 const ChattingPanel = styled(ScrollBarContainer)`
@@ -105,9 +115,9 @@ const ChatContainer: React.FC<ChatContainerProps> = (props: ChatContainerProps) 
     };
 
     return (
-        <Wrapper>
+        <Wrapper isInfoContainerOpen={props.isInfoContainerOpen}>
             <ChatTiles />
-            <ChatContainerHeader roomName={props.selectedChatRoom.room_name} />
+            <ChatContainerHeader room={props.selectedChatRoom} onHeaderClick={props.onChatContainerHeaderClick} />
             <ChattingPanel ref={scrollRef} onScroll={onScrollHandler}>
                 {props.selectedChatRoom &&
                     props.selectedChatRoom.messages &&

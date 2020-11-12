@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Avatar from 'components/Avatar/Avatar';
 import { MdDone, MdDoneAll, MdVolumeOff, MdExpandMore, MdVideocam } from 'react-icons/md';
-import { Icon } from 'components/global/globalStyles';
+import { Icon, TitleText, DescriptionText, DateText } from 'components/global/globalStyles';
 
 export enum MessageStatus {
     SENT,
@@ -52,6 +52,7 @@ const Content = styled.div`
     flex: 1;
     justify-content: center;
     height: 100%;
+    overflow: hidden;
 `;
 
 const SpaceBetweenContainer = styled.div`
@@ -73,10 +74,7 @@ const ActionContainer = styled.div`
 const LastChatMessageContainer = styled.div`
     display: flex;
     align-items: center;
-`;
-
-const LastChatMessage = styled.div`
-    margin-left: 0.3rem;
+    overflow: hidden;
 `;
 
 const UnreadMessageCount = styled.div`
@@ -117,15 +115,15 @@ const RoomCard: React.FC<ChatCardProps> = (props: ChatCardProps) => {
             <Avatar size={'5rem'} />
             <Content>
                 <SpaceBetweenContainer>
-                    <h1 style={{ fontSize: '17px', fontWeight: 400 }}>{props.title}</h1>
-                    <p style={{ fontSize: '12px', fontWeight: 200 }}>{props.date}</p>
+                    <TitleText>{props.title}</TitleText>
+                    <DateText>{props.date}</DateText>
                 </SpaceBetweenContainer>
                 <LastMessageAndActionContainer>
                     <LastChatMessageContainer>
-                        <MessageStatusIcon />
-                        <LastChatMessage>
-                            <h3 style={{ fontSize: '14px', fontWeight: 300 }}>{props.description}</h3>
-                        </LastChatMessage>
+                        <span>
+                            <MessageStatusIcon />
+                        </span>
+                        <DescriptionText>{props.description}</DescriptionText>
                     </LastChatMessageContainer>
                     <ActionContainer>
                         {unreadCount && <UnreadMessageCount>{unreadCount}</UnreadMessageCount>}

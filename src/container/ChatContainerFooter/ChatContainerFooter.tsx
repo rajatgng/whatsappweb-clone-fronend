@@ -152,7 +152,7 @@ const ChatContainerFooter: React.FC<ChatContainerFooterProps> = (props: ChatCont
                         </>
                     )}
                     <IconButton>
-                        <AttachFileIcon />
+                        <AttachFileIcon style={{ transform: 'rotate(45deg)' }} />
                     </IconButton>
                 </FooterLeftActions>
                 <StyledInput

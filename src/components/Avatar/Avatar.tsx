@@ -23,10 +23,12 @@ const ImageAvatar = styled.img<{ size?: string; isLoaded: boolean }>`
     display: ${(props) => (props.isLoaded ? 'inherit' : 'none')};
 `;
 
+const AvatarContainer = styled.span``;
+
 const Avatar: React.FC<AvatarProps> = (props: AvatarProps) => {
     const [imageLoaded, setImageLoaded] = useState(false);
     return (
-        <React.Fragment>
+        <AvatarContainer>
             {props.src && (
                 <ImageAvatar
                     src={props.src}
@@ -36,7 +38,7 @@ const Avatar: React.FC<AvatarProps> = (props: AvatarProps) => {
                 />
             )}
             {(!props.src || (props.src && !imageLoaded)) && <DummyAvatar size={props.size} />}
-        </React.Fragment>
+        </AvatarContainer>
     );
 };
 

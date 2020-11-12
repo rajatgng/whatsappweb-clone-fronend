@@ -12,7 +12,7 @@ export const Input = styled.input`
     width: 100%;
     min-height: 3.5rem;
     outline: none;
-    padding-left: 1.5rem;
+    padding: 0 1.5rem;
     font-size: 1.5rem;
 `;
 
@@ -59,4 +59,28 @@ export const ScrollBarContainer = styled.div`
     ::-webkit-scrollbar-thumb:hover {
         background: rgba(0, 0, 0, 0.3);
     }
+`;
+
+export const EllipsisTextContainer = styled.span`
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+`;
+
+export const TitleText = styled(EllipsisTextContainer)`
+    font-size: 1.7rem;
+    font-weight: 400;
+`;
+
+export const DateText = styled.span`
+    font-size: 1.2rem;
+    font-weight: 200;
+    margin-left: 0.6rem;
+    white-space: pre;
+`;
+
+export const DescriptionText = styled(EllipsisTextContainer)`
+    font-size: 1.4rem;
+    font-weight: 300;
+    margin-left: 0.3rem;
 `;

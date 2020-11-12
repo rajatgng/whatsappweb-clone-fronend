@@ -646,7 +646,8 @@ export const getRooms: Array<RoomModel> = [
                 created_at: '2020-11-07T06:53:00Z',
             },
         ],
-        room_name: 'Waldo 3',
+        room_name:
+            'Waldo 3 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
         members: [
             {
                 id: 1,
@@ -665,6 +666,6 @@ export const getRooms: Array<RoomModel> = [
                 image_url: 'https://robohash.org/voluptatemsimiliquedignissimos.jpg?size=50x50&set=set1',
             },
         ],
-        category: RoomCategory.PERSONAL,
+        category: RoomCategory.GROUP,
     },
 ];
