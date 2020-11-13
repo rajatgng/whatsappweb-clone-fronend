@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import Avatar from 'components/Avatar/Avatar';
 import { MdDone, MdDoneAll, MdVolumeOff, MdExpandMore, MdVideocam } from 'react-icons/md';
 import { Icon, TitleText, DescriptionText, DateText } from 'components/global/globalStyles';
@@ -12,7 +12,7 @@ export enum MessageStatus {
 
 const SentIcon = Icon(MdDone, { size: '1.8rem' });
 const DeliveredIcon = Icon(MdDoneAll, { size: '1.8rem' });
-const SeenIcon = Icon(MdDoneAll, { size: '1.8rem', color: '#4fc3f7' });
+const SeenIcon = Icon(MdDoneAll, { size: '1.8rem' });
 const ExpandMoreIcon = Icon(MdExpandMore, { size: '2.8rem' });
 const MuteIcon = Icon(MdVolumeOff, { size: '2rem' });
 
@@ -34,18 +34,18 @@ const RoomCardContainer = styled.div<{ selected?: boolean }>`
     padding: 0 1.3rem;
     align-items: center;
     // active : #ebebeb  hover:f5f5f5
-    background-color: ${({ selected }) => (selected ? '#ebebeb' : '#fff')};
-    ${({ selected }) =>
+    background-color: ${({ selected, theme }) => (selected ? theme.color.bg.cardSelected : theme.color.bg.default)};
+    ${({ selected, theme }) =>
         !selected &&
         `
     :hover {
-        background-color: #f5f5f5;
+        background-color: ${theme.color.bg.cardHover};
     }
     `}
 `;
 
 const Content = styled.div`
-    border-top: 0.15rem solid #f2f2f2;
+    border-top: 0.15rem solid ${(p) => p.theme.color.other.cardContainerBorder};
     padding-left: 1.3rem;
     display: flex;
     flex-direction: column;
@@ -81,18 +81,19 @@ const UnreadMessageCount = styled.div`
     height: 2rem;
     width: 2rem;
     border-radius: 50%;
-    background-color: #06d755;
+    background-color: ${(p) => p.theme.color.bg.notification};
     display: flex;
     justify-content: center;
     align-items: center;
     margin-right: 0.5rem;
-    color: #fff;
+    color: ${(p) => p.theme.color.text.secondary};
     font-size: 1.2rem;
     text-align: center;
 `;
 
 const RoomCard: React.FC<ChatCardProps> = (props: ChatCardProps) => {
     const [isHovered, setIsHovered] = useState(false);
+    const theme = useTheme();
 
     const { messageStatus, muted, selected, unreadCount } = props;
 
@@ -100,7 +101,7 @@ const RoomCard: React.FC<ChatCardProps> = (props: ChatCardProps) => {
         if (messageStatus === MessageStatus.DELIVERED) {
             return <DeliveredIcon />;
         } else if (messageStatus === MessageStatus.SEEN) {
-            return <SeenIcon />;
+            return <SeenIcon color={theme.color.other.iconTickSeen} />;
         } else {
             return <SentIcon />;
         }
@@ -126,7 +127,7 @@ const RoomCard: React.FC<ChatCardProps> = (props: ChatCardProps) => {
                         <DescriptionText>{props.description}</DescriptionText>
                     </LastChatMessageContainer>
                     <ActionContainer>
-                        {unreadCount && <UnreadMessageCount>{unreadCount}</UnreadMessageCount>}
+                        {!unreadCount && <UnreadMessageCount>5{unreadCount}</UnreadMessageCount>}
                         {muted && <MuteIcon />}
                         {isHovered && <ExpandMoreIcon />}
                     </ActionContainer>

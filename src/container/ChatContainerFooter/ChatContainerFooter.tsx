@@ -37,7 +37,8 @@ const FooterPanel = styled.div`
     display: flex;
     align-items: center;
     min-height: 6.2rem;
-    background-color: #ededed;
+    background-color: ${(p) => p.theme.color.bg.footer};
+    border-left: 0.1rem solid ${(p) => p.theme.color.other.borderStrong};
     z-index: 999;
     padding: 0.5rem 1rem;
 `;
@@ -58,13 +59,13 @@ const FooterRightActions = styled.div`
 
 const StyledIconButton = styled(IconButton)<{ selected?: boolean }>`
     :focus {
-        background-color: rgba(0, 0, 0, 0);
+        background-color: rgba(${(p) => p.theme.color.other.shadowRgb}, 0);
     }
-    ${({ selected }) =>
+    ${({ selected, theme }) =>
         selected &&
         `
     svg {
-        color: #009688;
+        color: ${theme.color.other.iconEmojiSelected};
     }
     `}
 `;

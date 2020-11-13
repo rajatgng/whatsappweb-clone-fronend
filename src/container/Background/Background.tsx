@@ -6,7 +6,7 @@ interface BackgroundProps {
 }
 
 const BackgroundContainer = styled.div`
-    background-color: #e5ddd5;
+    background-color: ${(p) => p.theme.color.bg.outerBg};
     position: relative;
     display: flex;
     justify-content: center;
@@ -14,7 +14,7 @@ const BackgroundContainer = styled.div`
     height: 100vh;
     width: 100vw;
     ::after {
-        background-color: #489789;
+        background-color: ${(p) => p.theme.color.bg.outerBgStripe};
         height: 12rem;
         top: 0;
         position: absolute;

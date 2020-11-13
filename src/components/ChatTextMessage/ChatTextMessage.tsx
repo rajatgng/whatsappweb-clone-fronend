@@ -1,11 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import MessageModel from 'models/MessageModel';
-import { getTimeIn12HFormat, textualDateFormat } from '../../utils/dateAndTimeUtils';
-import { Icon } from '../global/globalStyles';
+import { getTimeIn12HFormat, textualDateFormat } from 'utils/dateAndTimeUtils';
+import { Icon } from 'components/global/globalStyles';
 import { MdDoneAll } from 'react-icons/md';
 
-const SeenIcon = Icon(MdDoneAll, { size: '1.5rem', color: '#4fc3f7' });
+const SeenIcon = Icon(MdDoneAll, { size: '1.5rem' });
 
 interface ChatTextMessageProps {
     currentMessage: MessageModel;
@@ -27,7 +27,7 @@ const ReceivedWrapper = styled(SWrapper)`
 
 const SMessageContainer = styled.div<{ firstOfType?: boolean; lastOfType?: boolean }>`
     border-radius: 0.8rem;
-    box-shadow: 0 0.1rem 0.05rem rgba(0, 0, 0, 0.13);
+    box-shadow: 0 0.1rem 0.05rem rgba(${(p) => p.theme.color.other.shadowRgb}, 0.13);
     overflow-wrap: break-word;
     margin-bottom: 0.2rem;
     ${({ lastOfType }) =>
@@ -40,7 +40,7 @@ const SMessageContainer = styled.div<{ firstOfType?: boolean; lastOfType?: boole
     line-height: 2rem;
     z-index: 9;
     max-width: 65%;
-    color: #303030;
+    color: ${(p) => p.theme.color.text.conversation};
 
     @media screen and (max-width: 1300px) {
         max-width: 75%;
@@ -54,7 +54,7 @@ const SMessageContainer = styled.div<{ firstOfType?: boolean; lastOfType?: boole
 `;
 
 const SentMessageContainer = styled(SMessageContainer)`
-    background-color: #fff; //#dcf8c6
+    background-color: ${(p) => p.theme.color.bg.default};
     ${({ firstOfType }) =>
         firstOfType &&
         `
@@ -63,7 +63,7 @@ const SentMessageContainer = styled(SMessageContainer)`
 `;
 
 const ReceivedMessageContainer = styled(SMessageContainer)`
-    background-color: #dcf8c6;
+    background-color: ${(p) => p.theme.color.bg.incomingMessage};
     ${({ firstOfType }) =>
         firstOfType &&
         `
@@ -78,14 +78,14 @@ const SMessagePointer = styled.span`
 `;
 
 const ReceivedMessagePointer = styled(SMessagePointer)`
-    border-top: 1.2rem solid #dcf8c6;
+    border-top: 1.2rem solid ${(p) => p.theme.color.bg.incomingMessage};
     border-right: 1rem solid transparent;
     margin-right: -1rem;
     border-top-right-radius: 0.1rem;
 `;
 
 const SentMessagePointer = styled(SMessagePointer)`
-    border-top: 1.2rem solid #fff;
+    border-top: 1.2rem solid ${(p) => p.theme.color.bg.default};
     border-left: 1rem solid transparent;
     margin-left: -1rem;
     border-top-left-radius: 0.1rem;
@@ -101,10 +101,10 @@ const DateView = styled.div`
     text-align: center;
     padding: 0.6rem 1.2rem 0.6rem;
     margin-bottom: 1.2rem;
-    background-color: rgba(225, 245, 254, 0.92);
+    background-color: ${(p) => p.theme.color.bg.conversationDate};
     border-radius: 0.75rem;
-    text-shadow: 0 0.1rem 0 rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0.1rem 0.05rem rgba(0, 0, 0, 0.13);
+    text-shadow: 0 0.1rem 0 ${(p) => p.theme.color.text.shadow};
+    box-shadow: 0 0.1rem 0.05rem rgba(${(p) => p.theme.color.other.shadowRgb}, 0.13);
     font-size: 1.25rem;
     line-height: 2.1rem;
     text-transform: uppercase;
@@ -112,7 +112,7 @@ const DateView = styled.div`
 
 const SubScript = styled.div`
     font-size: 1.1rem;
-    color: rgba(0, 0, 0, 0.45);
+    color: ${(p) => p.theme.color.text.conversationSubscript};
     float: right;
     margin-top: 0.4rem;
     margin-left: 1rem;
@@ -140,6 +140,8 @@ const ChatTextMessage: React.FC<ChatTextMessageProps> = (props: ChatTextMessageP
         : null;
     const showDate = currentMsgDate !== previousMsgDate;
 
+    const theme = useTheme();
+
     return (
         <>
             {showDate && (
@@ -155,7 +157,7 @@ const ChatTextMessage: React.FC<ChatTextMessageProps> = (props: ChatTextMessageP
                         <TimeView>{getTimeIn12HFormat(props.currentMessage.created_at)}</TimeView>
                         <span>
                             {' '}
-                            <SeenIcon />
+                            <SeenIcon color={theme.color.other.iconTickSeen} />
                         </span>
                     </SubScript>
                 </MessageContainer>

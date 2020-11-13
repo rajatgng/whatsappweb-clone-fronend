@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import { IconType } from 'react-icons';
 
 export const HeaderPanel = styled.header`
-    background-color: #ededed;
+    background-color: ${(p) => p.theme.color.bg.header};
     height: 6rem;
 `;
 
 export const Input = styled.input`
-    border: 0.1rem solid #fff;
+    border: 0.1rem solid ${(p) => p.theme.color.other.inputBorder};
     border-radius: 2rem;
     width: 100%;
     min-height: 3.5rem;
@@ -17,7 +17,7 @@ export const Input = styled.input`
 `;
 
 export const Icon = (IconName: IconType, style?: { size?: string; color?: string }) => styled(IconName)`
-    color: ${() => style?.color ?? '#919191'};
+    color: ${(p) => style?.color ?? p.theme.color.other.iconDefault};
     height: ${() => style?.size ?? '2.4rem'};
     width: ${() => style?.size ?? '2.4rem'};
     cursor: pointer;
@@ -47,7 +47,7 @@ export const ScrollBarContainer = styled.div`
 
     /* Track */
     ::-webkit-scrollbar-track {
-        background: #fff;
+        background: ${(p) => p.theme.color.bg.scrollBarDefault};
     }
 
     /* Handle */

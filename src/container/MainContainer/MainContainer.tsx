@@ -9,9 +9,10 @@ import { getRooms } from '../../assets/dummyData';
 interface MainContainerProps {}
 
 const StyledMainContainer = styled.div`
-    background-color: white;
+    background-color: ${(p) => p.theme.color.bg.default};
     z-index: 100;
-    box-shadow: 0 0.1rem 0.2rem #ccc;
+    box-shadow: 0 0.1rem 0.1rem 0 rgba(${(p) => p.theme.color.other.shadowRgb}, 0.06),
+        0 0.2rem 0.5rem 0 rgba(${(p) => p.theme.color.other.shadowRgb}, 0.2);
     display: flex;
     width: 100%;
     max-width: 140rem;
@@ -40,8 +41,12 @@ const InfoContainer = styled.div`
 
 const NoRoomSelectedContainer = styled.div`
     display: flex;
+    width: 100%;
     justify-content: center;
     align-items: center;
+    padding: 3rem 0;
+    background-color: ${(p) => p.theme.color.bg.noContent};
+    border-left: 0.1rem solid rgba(${(p) => p.theme.color.other.shadowRgb}, 0.08);
 `;
 
 const MainContainer: React.FC<MainContainerProps> = (props: MainContainerProps) => {
@@ -71,7 +76,7 @@ const MainContainer: React.FC<MainContainerProps> = (props: MainContainerProps) 
                     />
                 ) : (
                     <NoRoomSelectedContainer>
-                        <h1>hhhhhhhhhh</h1>
+                        <h1>To get started select the Chat ! </h1>
                     </NoRoomSelectedContainer>
                 )}
                 {isInfoContainerOpen && <InfoContainer onClick={() => setIsInfoContainerOpen(false)} />}

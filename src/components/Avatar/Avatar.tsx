@@ -8,7 +8,7 @@ interface AvatarProps {
 }
 
 const DummyAvatar = styled(FaUserCircle)<{ size?: string }>`
-    color: #dfe5e7;
+    color: ${(props) => props.theme.color.bg.avatar};
     height: ${(props) => props.size ?? '4rem'};
     width: ${(props) => props.size ?? '4rem'};
     cursor: pointer;

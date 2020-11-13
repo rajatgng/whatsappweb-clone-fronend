@@ -6,6 +6,7 @@ export const getTimeIn12HFormat = (time: Date | string) => {
     }
 };
 
+// if `showTime = true` it will show time instead of `Today`
 export const textualDateFormat = (date: Date | string, showTime?: boolean) => {
     const d = new Date(date);
     const newTodayDate = new Date().toLocaleDateString().split('/').reverse().join('');

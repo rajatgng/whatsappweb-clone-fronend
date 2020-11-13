@@ -21,7 +21,7 @@ const iconSize = '2.8rem';
 const ExpandMoreIcon = Icon(MdExpandMore, { size: iconSize });
 
 const Wrapper = styled.div<{ isInfoContainerOpen: boolean }>`
-    background-color: #e5ddd5;
+    background-color: ${(p) => p.theme.color.bg.conversationPanel};
     position: relative;
     display: flex;
     flex: 3;
@@ -71,7 +71,7 @@ const ScrollDownBtn = styled.div<{ isUnMounting?: boolean }>`
     height: 4.2rem;
     width: 4.2rem;
     border-radius: 50%;
-    background-color: #fff;
+    background-color: ${(p) => p.theme.color.bg.default};
     position: absolute;
     right: 1rem;
     bottom: 8rem;
@@ -79,7 +79,8 @@ const ScrollDownBtn = styled.div<{ isUnMounting?: boolean }>`
     justify-content: center;
     align-items: center;
     z-index: 999;
-    box-shadow: 0 0.1rem 0.1rem 0 rgba(0, 0, 0, 0.06), 0 0.2rem 0.5rem 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0.1rem 0.1rem 0 rgba(${(p) => p.theme.color.other.shadowRgb}, 0.06),
+        0 0.2rem 0.5rem 0 rgba(${(p) => p.theme.color.other.shadowRgb}, 0.2);
     animation: ${({ isUnMounting }) => (isUnMounting ? outLargeAnimation : enlargeAnimation)} 250ms
         cubic-bezier(0.4, 0, 0.2, 1);
 `;

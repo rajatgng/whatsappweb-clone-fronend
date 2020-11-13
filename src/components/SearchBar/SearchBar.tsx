@@ -8,7 +8,8 @@ interface SearchBarProps {
 }
 
 const SearchBarWrapper = styled.div<{ isInputFocused: boolean }>`
-    background-color: ${(props) => (props.isInputFocused ? '#fff' : '#f6f6f6')};
+    background-color: ${(props) =>
+        props.isInputFocused ? props.theme.color.bg.default : props.theme.color.bg.searchContainer};
     position: relative;
     height: 5rem;
     padding: 0.6rem 1rem;
@@ -27,7 +28,7 @@ const enlargeAnimation = keyframes`
 `;
 
 const SearchIcon = styled(MdSearch)`
-    color: #b3b3b3;
+    color: ${(p) => p.theme.color.other.iconDefault};
     font-size: 2rem;
     position: absolute;
     left: 2.5rem;
@@ -43,7 +44,7 @@ const rotateAnimation = keyframes`
 `;
 
 const ArrowBackIcon = styled(MdArrowBack)`
-    color: #00a5f4;
+    color: ${(p) => p.theme.color.other.iconArrow};
     font-size: 2.2rem;
     position: absolute;
     left: 2.5rem;
@@ -54,7 +55,7 @@ const ArrowBackIcon = styled(MdArrowBack)`
 `;
 
 const CloseIcon = styled(MdClose)`
-    color: #b3b3b3;
+    color: ${(p) => p.theme.color.other.iconDefault};
     font-size: 2rem;
     position: absolute;
     right: 2.5rem;
