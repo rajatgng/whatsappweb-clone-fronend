@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { MdAttachFile, MdClose, MdGif, MdMic, MdMood, MdSend } from 'react-icons/md';
 import { BiNote } from 'react-icons/bi';
 import RoomModel from 'models/RoomModel';
+import Picker, { IEmojiData } from 'emoji-picker-react';
 
 interface ChatContainerFooterProps {
     selectedChatRoom: RoomModel;
@@ -72,9 +73,20 @@ const StyledIconButton = styled(IconButton)<{ selected?: boolean }>`
 
 const EmojiInput = styled.div`
     height: 32rem;
-    //background-color: #ededed;
-    background-color: green;
     z-index: 999;
+    .emoji-picker-react {
+        background-color: ${(props) => props.theme.color.bg.header};
+        width: 100%;
+        .emoji-group {
+            background-color: ${(props) => props.theme.color.bg.header};
+            :before {
+                position: inherit;
+            }
+        }
+        input {
+            background-color: #e6e6e6;
+        }
+    }
 `;
 
 const ChatContainerFooter: React.FC<ChatContainerFooterProps> = (props: ChatContainerFooterProps) => {
@@ -108,9 +120,18 @@ const ChatContainerFooter: React.FC<ChatContainerFooterProps> = (props: ChatCont
         setOpenEmojiInput(v);
         props.emojiInputToggle(v);
     };
+
+    const onEmojiClick = (event: MouseEvent, emojiObject: IEmojiData) => {
+        setTextMessage(textMessage + emojiObject.emoji);
+    };
+
     return (
         <ColumnContainer>
-            {openEmojiInput && <EmojiInput></EmojiInput>}
+            {openEmojiInput && (
+                <EmojiInput>
+                    <Picker onEmojiClick={onEmojiClick} />
+                </EmojiInput>
+            )}
             <FooterPanel>
                 <FooterLeftActions>
                     {openEmojiInput && (

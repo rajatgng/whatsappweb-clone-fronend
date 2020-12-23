@@ -8,12 +8,14 @@ import RoomModel from 'models/RoomModel';
 import { sortByChronology } from 'utils/sortByChronology';
 import ChatContainerFooter from 'container/ChatContainerFooter/ChatContainerFooter';
 import ChatContainerHeader from '../ChatContainerHeader/ChatContainerHeader';
-
+import { socket } from '../../service/socketService';
+import io from 'socket.io-client';
 interface ChatContainerProps {
     selectedChatRoom: RoomModel;
     onMessageSubmit: (message: MessageModel) => void;
     isInfoContainerOpen: boolean;
     onChatContainerHeaderClick: () => void;
+    setIsInfoContainerOpen: (val: boolean) => void;
 }
 
 const iconSize = '2.8rem';
@@ -24,9 +26,16 @@ const Wrapper = styled.div<{ isInfoContainerOpen: boolean }>`
     background-color: ${(p) => p.theme.color.bg.conversationPanel};
     position: relative;
     display: flex;
-    flex: 3;
+    flex-grow: 7;
+    flex-basis: 70%;
     flex-direction: column;
     min-width: 0; // or overflow: hidden;
+    ${({ isInfoContainerOpen }) =>
+        isInfoContainerOpen &&
+        `
+         flex-basis: 50%;
+        flex-grow: 5;
+    `};
     @media screen and (max-width: 1024px) {
         ${({ isInfoContainerOpen }) =>
             isInfoContainerOpen &&
@@ -39,10 +48,6 @@ const Wrapper = styled.div<{ isInfoContainerOpen: boolean }>`
 const ChattingPanel = styled(ScrollBarContainer)`
     flex: 1;
     z-index: 999;
-    /* Track */
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
 `;
 
 const ChatTiles = styled.div`
@@ -93,7 +98,27 @@ const ChatContainer: React.FC<ChatContainerProps> = (props: ChatContainerProps) 
 
     useEffect(() => {
         scrollToBottom();
-    }, [props.selectedChatRoom, props.selectedChatRoom.messages?.length, isEmojiInputOpened]);
+    }, [
+        props.selectedChatRoom,
+        props.selectedChatRoom.messages?.length,
+        isEmojiInputOpened,
+        props.isInfoContainerOpen,
+    ]);
+
+    useEffect(() => {
+        // const socket = io('http://localhost:4001');
+        socket.emit('HELLO_THERE');
+        socket.on('WELCOME_FROM_SERVER', () => {
+            console.log(' server connected');
+        });
+        socket.on('test', (d: string) => {
+            console.log(d);
+        });
+        return () => {
+            props.setIsInfoContainerOpen(false);
+            socket.off('WELCOME_FROM_SERVER', () => console.log('server disconnected'));
+        };
+    }, [props.selectedChatRoom]);
 
     const scrollToBottom = () => {
         if (scrollRef && scrollRef.current) {

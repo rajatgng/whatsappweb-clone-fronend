@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ChatContainer from 'container/ChatContainer/ChatContainer';
 import ChatListAndActionsContainer from 'container/ChatListAndActionsContainer/ChatListAndActionsContainer';
-import RoomModel from '../../models/RoomModel';
-import { getRooms } from '../../assets/dummyData';
+import InfoContainer from 'container/InfoContainer/InfoContainer';
+import RoomModel from 'models/RoomModel';
+import { getRooms } from 'assets/dummyData';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface MainContainerProps {}
@@ -24,24 +25,10 @@ const StyledMainContainer = styled.div`
     }
 `;
 
-const ChatAndInfoContainer = styled.div`
-    width: 70%;
-    display: flex;
-`;
-
-const InfoContainer = styled.div`
-    flex: 2;
-    height: 100%;
-    background-color: yellow;
-    z-index: 999;
-    @media screen and (max-width: 1024px) {
-        flex-basis: 100%;
-    }
-`;
-
 const NoRoomSelectedContainer = styled.div`
     display: flex;
-    width: 100%;
+    flex-grow: 7;
+    flex-basis: 70%;
     justify-content: center;
     align-items: center;
     padding: 3rem 0;
@@ -60,27 +47,31 @@ const MainContainer: React.FC<MainContainerProps> = (props: MainContainerProps) 
                 selectedChatRoom={rooms.filter((room) => room.id === selectedChatRoomId)[0]}
                 rooms={rooms}
             />
-            <ChatAndInfoContainer>
-                {selectedChatRoomId ? (
-                    <ChatContainer
-                        onChatContainerHeaderClick={() => setIsInfoContainerOpen(true)}
-                        isInfoContainerOpen={isInfoContainerOpen}
-                        selectedChatRoom={rooms.filter((room) => room.id === selectedChatRoomId)[0]}
-                        onMessageSubmit={(message) => {
-                            const newRooms = rooms.filter((room) => room.id !== selectedChatRoomId);
-                            const room = rooms.filter((room) => room.id === selectedChatRoomId)[0];
-                            room.messages?.push(message);
-                            newRooms.push(room);
-                            setRooms(newRooms);
-                        }}
-                    />
-                ) : (
-                    <NoRoomSelectedContainer>
-                        <h1>To get started select the Chat ! </h1>
-                    </NoRoomSelectedContainer>
-                )}
-                {isInfoContainerOpen && <InfoContainer onClick={() => setIsInfoContainerOpen(false)} />}
-            </ChatAndInfoContainer>
+            {selectedChatRoomId ? (
+                <ChatContainer
+                    onChatContainerHeaderClick={() => setIsInfoContainerOpen(true)}
+                    isInfoContainerOpen={isInfoContainerOpen}
+                    setIsInfoContainerOpen={setIsInfoContainerOpen}
+                    selectedChatRoom={rooms.filter((room) => room.id === selectedChatRoomId)[0]}
+                    onMessageSubmit={(message) => {
+                        const newRooms = rooms.filter((room) => room.id !== selectedChatRoomId);
+                        const room = rooms.filter((room) => room.id === selectedChatRoomId)[0];
+                        room.messages?.push(message);
+                        newRooms.push(room);
+                        setRooms(newRooms);
+                    }}
+                />
+            ) : (
+                <NoRoomSelectedContainer>
+                    <h1>To get started select the Chat ! </h1>
+                </NoRoomSelectedContainer>
+            )}
+            {selectedChatRoomId && isInfoContainerOpen && (
+                <InfoContainer
+                    selectedRoom={rooms.filter((room) => room.id === selectedChatRoomId)[0]}
+                    onClick={() => setIsInfoContainerOpen(false)}
+                />
+            )}
         </StyledMainContainer>
     );
 };

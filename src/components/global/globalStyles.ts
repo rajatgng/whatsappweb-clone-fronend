@@ -47,7 +47,7 @@ export const ScrollBarContainer = styled.div`
 
     /* Track */
     ::-webkit-scrollbar-track {
-        background: ${(p) => p.theme.color.bg.scrollBarDefault};
+        background: transparent;
     }
 
     /* Handle */
@@ -75,7 +75,6 @@ export const TitleText = styled(EllipsisTextContainer)`
 export const DateText = styled.span`
     font-size: 1.2rem;
     font-weight: 200;
-    margin-left: 0.6rem;
     white-space: pre;
 `;
 
@@ -83,4 +82,14 @@ export const DescriptionText = styled(EllipsisTextContainer)`
     font-size: 1.4rem;
     font-weight: 300;
     margin-left: 0.3rem;
+`;
+
+export const Card = styled.div`
+    padding: 3rem 3rem 2rem;
+    margin-bottom: 1rem;
+    background-color: ${(p) => p.theme.color.bg.default};
+    box-shadow: 0 0.1rem 0.3rem rgba(${(p) => p.theme.color.other.shadowRgb}, 0.08);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
 `;

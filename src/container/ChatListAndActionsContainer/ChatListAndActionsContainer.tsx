@@ -13,7 +13,9 @@ interface ChatListAndActionsContainerProps {
     rooms: RoomModel[];
 }
 const Wrapper = styled.div`
-    width: 30%;
+    flex-grow: 3;
+    flex-basis: 30%;
+    min-width: 0;
 `;
 
 const HeaderContent = styled.div`
