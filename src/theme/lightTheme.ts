@@ -6,7 +6,7 @@ const lightTheme = {
         bg: {
             outerBg: '#e5ddd5',
             outerBgStripe: '#489789',
-            default: '#fff',
+            default: '#ffffff',
             header: '#ededed',
             headerSecondary: '#00BFA5',
             footer: '#f0f0f0',
@@ -17,13 +17,13 @@ const lightTheme = {
             notification: '#06d755',
             cardHover: '#f5f5f5',
             cardSelected: '#ebebeb',
-            scrollBarDefault: '#fff',
+            scrollBarDefault: '#ffffff',
             conversationPanel: '#e5ddd5', //same as outerBg
             conversationDate: 'rgba(225, 245, 254, 0.92)',
         },
         text: {
             default: '#000000',
-            secondary: '#fff',
+            secondary: '#ffffff',
             conversation: '#303030',
             green: '#009688',
             conversationSubscript: 'rgba(0, 0, 0, 0.45)',
@@ -36,11 +36,12 @@ const lightTheme = {
             iconTickSeen: '#4fc3f7',
             iconEmojiSelected: '#009688',
             cardContainerBorder: '#f2f2f2',
-            inputBorder: '#fff',
+            inputBorder: '#ffffff',
             borderStrong: 'rgba(0, 0, 0, 0.08)',
         },
     },
 };
+
 export default lightTheme;
 
 type Theme = typeof lightTheme;

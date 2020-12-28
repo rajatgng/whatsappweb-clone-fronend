@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import { MdAttachFile, MdClose, MdGif, MdMic, MdMood, MdSend } from 'react-icons/md';
 import { BiNote } from 'react-icons/bi';
 import RoomModel from 'models/RoomModel';
-import Picker, { IEmojiData } from 'emoji-picker-react';
+import { IEmojiData } from 'emoji-picker-react';
+import EmojiInput from 'components/EmojiInput/EmojiInput';
 
 interface ChatContainerFooterProps {
     selectedChatRoom: RoomModel;
@@ -71,24 +72,6 @@ const StyledIconButton = styled(IconButton)<{ selected?: boolean }>`
     `}
 `;
 
-const EmojiInput = styled.div`
-    height: 32rem;
-    z-index: 999;
-    .emoji-picker-react {
-        background-color: ${(props) => props.theme.color.bg.header};
-        width: 100%;
-        .emoji-group {
-            background-color: ${(props) => props.theme.color.bg.header};
-            :before {
-                position: inherit;
-            }
-        }
-        input {
-            background-color: #e6e6e6;
-        }
-    }
-`;
-
 const ChatContainerFooter: React.FC<ChatContainerFooterProps> = (props: ChatContainerFooterProps) => {
     const [textMessage, setTextMessage] = useState('');
     const [openEmojiInput, setOpenEmojiInput] = useState(false);
@@ -127,11 +110,7 @@ const ChatContainerFooter: React.FC<ChatContainerFooterProps> = (props: ChatCont
 
     return (
         <ColumnContainer>
-            {openEmojiInput && (
-                <EmojiInput>
-                    <Picker onEmojiClick={onEmojiClick} />
-                </EmojiInput>
-            )}
+            {openEmojiInput && <EmojiInput onEmojiClick={onEmojiClick} />}
             <FooterPanel>
                 <FooterLeftActions>
                     {openEmojiInput && (
@@ -153,26 +132,26 @@ const ChatContainerFooter: React.FC<ChatContainerFooterProps> = (props: ChatCont
                     >
                         <MoodIcon />
                     </StyledIconButton>
-                    {openEmojiInput && (
-                        <>
-                            <StyledIconButton
-                                selected={selectedEmojiInput === EmojiType.GIF}
-                                onClick={() => {
-                                    setSelectedEmojiInput(EmojiType.GIF);
-                                }}
-                            >
-                                <GifIcon />
-                            </StyledIconButton>
-                            <StyledIconButton
-                                selected={selectedEmojiInput === EmojiType.STICKER}
-                                onClick={() => {
-                                    setSelectedEmojiInput(EmojiType.STICKER);
-                                }}
-                            >
-                                <StickerIcon />
-                            </StyledIconButton>
-                        </>
-                    )}
+                    {/*{openEmojiInput && (*/}
+                    {/*    <>*/}
+                    {/*        <StyledIconButton*/}
+                    {/*            selected={selectedEmojiInput === EmojiType.GIF}*/}
+                    {/*            onClick={() => {*/}
+                    {/*                setSelectedEmojiInput(EmojiType.GIF);*/}
+                    {/*            }}*/}
+                    {/*        >*/}
+                    {/*            <GifIcon />*/}
+                    {/*        </StyledIconButton>*/}
+                    {/*        <StyledIconButton*/}
+                    {/*            selected={selectedEmojiInput === EmojiType.STICKER}*/}
+                    {/*            onClick={() => {*/}
+                    {/*                setSelectedEmojiInput(EmojiType.STICKER);*/}
+                    {/*            }}*/}
+                    {/*        >*/}
+                    {/*            <StickerIcon />*/}
+                    {/*        </StyledIconButton>*/}
+                    {/*    </>*/}
+                    {/*)}*/}
                     <IconButton>
                         <AttachFileIcon style={{ transform: 'rotate(45deg)' }} />
                     </IconButton>
